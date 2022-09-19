@@ -1,5 +1,17 @@
 package main
 
+import(
+	"encoding/binary"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+)
+
 var (
 	db *sqlx.DB
 )
@@ -28,7 +40,7 @@ func main() {
 		rows.Scan(&name, &data)
 
 		/ 書き込み
-		err = ioutil.WriteFile("/home/isucon/isucon-practice-20210808/webapp/public/icons/"+name, data, 0666)
+		err = ioutil.WriteFile("/home/isucon/isucon-practice-20220919/webapp/public/icons/"+name, data, 0666)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
