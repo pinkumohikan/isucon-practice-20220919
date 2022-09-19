@@ -1,6 +1,6 @@
 .PHONY: *
 
-gogo: stop-services build truncate-logs start-services
+gogo: stop-services build truncate-logs start-services bench
 
 build:
 	cd webapp/go && make build
