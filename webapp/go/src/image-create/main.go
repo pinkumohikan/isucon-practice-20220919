@@ -6,7 +6,6 @@ import(
 	"io/ioutil"
 	"log"
 	"os"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -17,9 +16,6 @@ var (
 )
 
 func main() {
-	seedBuf := make([]byte, 8)
-	crand.Read(seedBuf)
-	rand.Seed(int64(binary.LittleEndian.Uint64(seedBuf)))
 
 	dsn := fmt.Sprintf("isucon:isucon@tcp(127.0.0.1:3306)/isubata?parseTime=true&loc=Local&charset=utf8mb4&interpolateParams=true")
 
