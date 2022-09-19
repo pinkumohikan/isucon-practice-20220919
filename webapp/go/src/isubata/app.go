@@ -355,11 +355,12 @@ func fetchUsers(userIds []int64) (map[int64]User, error) {
 	userMap := map[int64]User{}
 	users := make([]User, 0)
 
-	q, p, err := sqlx.In("SELECT name, display_name, avatar_icon FROM user WHERE id IN (?)", userIds)
+	q, p, err := sqlx.In("SELECT id, name, display_name, avatar_icon FROM user WHERE id IN (?)", userIds)
 	if err != nil {
 		return nil, err
 	}
 
+	q = db.Rebind(q)
 	if err := db.Select(&users, q, p...); err != nil {
 		return nil, err
 	}
