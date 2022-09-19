@@ -39,7 +39,7 @@ func main() {
 		var data []byte
 		rows.Scan(&name, &data)
 
-		/ 書き込み
+		// 書き込み
 		err = ioutil.WriteFile("/home/isucon/isucon-practice-20220919/webapp/public/icons/"+name, data, 0666)
 		if err != nil {
 			fmt.Println(err)
