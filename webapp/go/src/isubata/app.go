@@ -355,6 +355,10 @@ func fetchUsers(userIds []int64) (map[int64]User, error) {
 	userMap := map[int64]User{}
 	users := make([]User, 0)
 
+	if len(userIds) == 0 {
+		return nil, nil
+	}
+
 	q, p, err := sqlx.In("SELECT id, name, display_name, avatar_icon FROM user WHERE id IN (?)", userIds)
 	if err != nil {
 		return nil, err
