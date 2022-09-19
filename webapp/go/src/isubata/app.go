@@ -351,6 +351,26 @@ func postMessage(c echo.Context) error {
 	return c.NoContent(204)
 }
 
+func fetchUsers(userIds []int64) (map[int64]User, error) {
+	userMap := map[int64]User{}
+	users := make([]User, 0)
+
+	q, p, err := sqlx.In("SELECT name, display_name, avatar_icon FROM user WHERE id IN (?)", userIds)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Select(&users, q, p...); err != nil {
+		return nil, err
+	}
+
+	for _, u := range users {
+		userMap[u.ID] = u
+	}
+
+	return userMap, nil
+}
+
 func jsonifyMessage(m Message) (map[string]interface{}, error) {
 	u := User{}
 	err := db.Get(&u, "SELECT name, display_name, avatar_icon FROM user WHERE id = ?",
@@ -387,13 +407,24 @@ func getMessage(c echo.Context) error {
 		return err
 	}
 
+	userIds := make([]int64, 0)
+	for _, m := range messages {
+		userIds = append(userIds, m.UserID)
+	}
+
+	userMap, err := fetchUsers(userIds)
+	if err != nil {
+		return err
+	}
+
 	response := make([]map[string]interface{}, 0)
 	for i := len(messages) - 1; i >= 0; i-- {
 		m := messages[i]
-		r, err := jsonifyMessage(m)
-		if err != nil {
-			return err
-		}
+		r := make(map[string]interface{})
+		r["id"] = m.ID
+		r["user"] = userMap[m.UserID]
+		r["date"] = m.CreatedAt.Format("2006/01/02 15:04:05")
+		r["content"] = m.Content
 		response = append(response, r)
 	}
 
