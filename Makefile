@@ -1,6 +1,6 @@
 .PHONY: *
 
-gogo: stop-services build truncate-logs start-services bench
+gogo: stop-services build truncate-logs start-services bench kataribe
 
 build:
 	cd webapp/go && make build
@@ -25,3 +25,6 @@ truncate-logs:
 
 bench:
 	ssh bench "cd ~/isubata/bench && ./bin/bench -remotes 172.31.1.138"
+
+kataribe:
+	sudo cat /var/log/nginx/access.log | ./kataribe -conf kataribe.toml | grep --after-context 20 "Top 20 Sort By Total"
